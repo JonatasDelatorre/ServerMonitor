@@ -11,4 +11,4 @@ Black uptade the 3 process with the highest usage of memory.
 
 This project use nodeJS, so start the node server them access the localhost destination in the browser.
 
-Developed for window, dont have a linux version yet.
+Developed for Windows, dont have a linux version yet.
