@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Multiroom Chat</title>
+		
+		<!-- JQUERY -->
+		<script src="js/jquery-2.2.1.js"></script>
+		
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	
+		<!-- estilo -->
+		<link href="css/style.css" rel="stylesheet">
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+
+        <script type="text/javascript">
+			
+			function ocultaNavbar(){
+				$("#btn_navbar_toggle").attr("class","navbar-toggle collapsed");
+				$("#navbar-collapse-1").attr("class","navbar-collapse collapse");
+				$("#btn_navbar_toggle").attr("aria-expanded","false");
+				$("#navbar-collapse-1").attr("aria-expanded","false");
+			}
+
+		</script>	
+
+		
+	</head>
+
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1" id="btn_navbar_toggle">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">Dados Avançados do Servidor</a>
+				</div>
+			</div>
+        </nav>
+        
+        <div class="row">
+            <div class="column">
+                <div class="container col-sm-3" id="graf">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+            <div class="column" id="progs">
+                <div class="container col-sm-3" id="replace">
+                   
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="container col-sm-3" id="graf2">
+                <canvas id="myChart2"></canvas>
+            </div>
+        </div>
+		
+		<nav class="navbar navbar-default navbar-fixed-bottom rodape" role="navigation">
+			<div class="container">
+                    <div class="col-md-12 atuabt1">
+                        <div>
+                            <button class="btn btn-default atuabt" type="button" id="atualizar">CPU/MEM</button>
+                            <button class="btn btn-default atuabt" type="button" id="tempatualiza">Tempo</button>
+                            <button class="btn btn-default atuabt" type="button" id="procatualiza">Processos</button>
+                        </div>
+                    </div>
+			</div>
+		</nav>		
+		
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+		
+		<script src="/socket.io/socket.io.js"></script>
+
+		<script>
+			var socket = io('http://192.168.1.101');
+			var cont = 0;
+			var dataLabels = [0];
+			var dadosCpu = [0];
+            var dadosMem = [100]
+            
+            var cont2 = 0;
+            var dadosLabels2 = [0];
+            var dadosSys = [0];
+            var dadosProc = [0];
+			
+			$('#atualizar').click(function(){
+
+				socket.emit(
+					'msgParaServidor',
+					{op: 1}
+				);
+			
+            });
+
+			$('#tempatualiza').click(function(){
+
+                socket.emit(
+                    'msgParaServidor',
+                    {op: 2}
+                );
+
+            });
+            
+			
+			$('#procatualiza').click(function(){
+
+                socket.emit(
+                    'msgParaServidor',
+                    {op: 3}
+                );
+
+            });
+			
+			socket.on('msgParaCliente', function(data){
+
+                if(data.op == 1){
+                    cont += 1;
+
+                    dataLabels.push(cont);
+                    dadosCpu.push(data.cpu*100);
+                    dadosMem.push(data.mem*100);
+                    if(cont > 10){
+                        dataLabels.shift();
+                        dadosCpu.shift();
+                        dadosMem.shift(); 
+                    }
+
+                    var ctx = document.getElementById("myChart");
+                    
+                    var myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: dataLabels,
+                            datasets: [
+                                {
+                                    label: "Taxa uso de CPU - (%)",
+                                    data: dadosCpu,
+                                    borderWidth: 5,
+                                    borderColor: 'rgba(77,166,253,0.85)',
+                                    backgroundColor: 'transparent'
+                                },
+                                {
+                                    label: "Taxa uso de Mem - (%)",
+                                    data: dadosMem,
+                                    borderWidth: 5,
+                                    borderColor: 'rgba(6,204,6,0.85)',
+                                    backgroundColor: 'transparent'
+                                },
+                            ]
+                        }
+                    });
+                };
+
+                if(data.op == 2){
+
+                    cont2 += 1;
+
+                    dadosLabels2.push(cont2);
+                    dadosSys.push(data.sysup);
+                    dadosProc.push(data.procup);
+
+                    var ctx = document.getElementById("myChart2");
+
+                    var myChart2 = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: dadosLabels2,
+                            datasets: [
+                                {
+                                    label: "sysUP",
+                                    data: dadosSys,
+                                    borderWidth: 5,
+                                    borderColor: 'rgba(77,166,253,0.85)',
+                                    backgroundColor: 'transparent'
+                                },
+                                {
+                                    label: "procUP",
+                                    data: dadosProc,
+                                    borderWidth: 5,
+                                    borderColor: 'rgba(6,204,6,0.85)',
+                                    backgroundColor: 'transparent'
+                                },
+                            ]
+                        }
+                    });
+                }
+
+                if(data.op == 3){
+                    var html = "";
+
+                    html += '<div class="container col-sm-3" id="replace">';
+                    html +=     '<table border="1">';
+                    html +=         '<tr>';
+                    html +=             '<td><h5><b> Nome do processo </b></h5></td>';
+                    html +=             '<td><h5><b> PID do processo </b> </h5></td>';
+                    html +=             '<td><h5><b> Uso de memória </b></h5></td>';
+                    html +=         '</tr>';
+                    html +=         '<tr>';
+                    html +=             '<td><h6>' + data.proc[0].nome + '</h6></td>';
+                    html +=             '<td><h6>' + data.proc[0].id + '</h6></td>';
+                    html +=             '<td><h6>' + data.proc[0].memuse + '</h6></td>';
+                    html +=         '</tr>';
+                    html +=         '<tr>';
+                    html +=             '<td><h6>' + data.proc[1].nome + '</h6></td>';
+                    html +=             '<td><h6>' + data.proc[1].id + '</h6></td>';
+                    html +=             '<td><h6>' + data.proc[1].memuse + '</h6></td>';
+                    html +=         '</tr>';
+                    html +=         '<tr>';
+                    html +=             '<td><h6>' + data.proc[2].nome + '</h6></td>';
+                    html +=             '<td><h6>' + data.proc[2].id + '</h6></td>';
+                    html +=             '<td><h6>' + data.proc[2].memuse + '</h6></td>';
+                    html +=            '</tr>';
+                    html +=        '</table>';
+                    html +=    '</div>';
+
+                    $('#replace').replaceWith(html);
+                }
+			});
+
+		</script>
+
+	</body>
+</html>

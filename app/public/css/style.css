@@ -1,0 +1,72 @@
+body {
+    background-color: #444;
+    background: url('../images/login-bg.jpg');  
+}
+
+
+.vertical-offset-80 {
+    padding-top: 80px;
+}
+
+.img-responsive {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: auto;
+}
+.panel {
+    margin-bottom: 20px;
+    background-color: rgba(255, 255, 255, 0.75);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+}
+
+.linha_usuario{
+    display: block;
+    margin-top:10px;
+    padding:5px;
+}
+
+.linha_usuario img{
+    margin-right:5px;
+    margin-top:-7px;
+}
+
+img {
+    vertical-align: middle;
+}
+
+#graf {
+    margin-top: 60px;
+    width: 50%;
+    margin-right: 40px;
+}
+
+#graf2 {
+    margin-bottom: 40px;
+    width: 25%;
+}
+
+div canvas {
+    height: 50px;
+}
+
+#progs {
+    margin-top: 60px;
+}
+
+td {
+    padding: 3px;
+}
+
+.atuabt1 {
+    position: absolute;
+    left: 35%;
+}
+.atuabt {
+    background-color: forestgreen;
+    color: black;
+    margin-top: 5px;
+}

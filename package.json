@@ -1,0 +1,29 @@
+{
+  "name": "multroom_chat",
+  "version": "1.0.0",
+  "description": "node learn project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JonatasDelatorre/multroom_chat.git"
+  },
+  "author": "JonatasDelatorre",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JonatasDelatorre/multroom_chat/issues"
+  },
+  "homepage": "https://github.com/JonatasDelatorre/multroom_chat#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "consign": "^0.1.6",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "express-validator": "^5.2.0",
+    "os-utils": "0.0.14",
+    "shelljs": "^0.8.2",
+    "socket.io": "^2.1.0"
+  }
+}
